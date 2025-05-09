@@ -1,5 +1,4 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
 const fs = require('fs');
@@ -43,13 +42,9 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: './layout/index.html',
         }),
-        new MonacoWebpackPlugin(),
-        // Simple way:
         new webpack.DefinePlugin({
             'process.env': JSON.stringify(process.env)
         }),
-        // Or if using Option 2:
-        // new webpack.DefinePlugin(envKeys),
     ],
     devServer: {
         static: path.resolve(__dirname, 'dist'),
