@@ -1,26 +1,26 @@
-import {AlertDialog, applyState, Column, createClass, FutureCreator, print, removeClass, Row, Watch} from "./lib/state.js";
+import { RemoveClass, Row, Watch} from "./lib/state.js";
 import {renderBody} from "./lib/state.js";
-import {setChild} from "./lib/state.js";
+import {SetChild} from "./lib/state.js";
 import {Style} from "./lib/state.js";
-import {createNode,route,vanilla,setInner} from "./lib/state.js";
-import {listenForEvent} from "./lib/state.js";
+import {CreateNode,route,Vanilla} from "./lib/state.js";
+import {HandleEvent} from "./lib/state.js";
 import {nJFloatingActionButton as FAB} from "./lib/main.js";
 import {Text} from "./lib/state.js";
 import { SwitchBar } from "./lib/state.js";
-import myImage from './public/dark.jpg'
+
 
 
 
 export const App = () => {
   //Page 1
-  const page = createNode('div');
+  const page = CreateNode('div');
   // Center text
-  const text = createNode('h1');
+  const text = CreateNode('h1');
   //Header
-  const navbar = createNode('div');
+  const navbar = CreateNode('div');
   // Header title
-  const title = createNode('h2');
-  const mode = createNode('small');
+  const title = CreateNode('h2');
+  const mode = CreateNode('small');
 
   
   //Body style
@@ -39,9 +39,9 @@ export const App = () => {
   //Toggle view Mode
   const [isDark, setDark, observe] = Watch(false);
 
-  const handleValue = (value) => {
+  const handleValue = () => {
     setDark(!isDark());
-  }
+  };
   
   const switchBar = SwitchBar({
     activeColor:'grey',
@@ -55,30 +55,30 @@ export const App = () => {
   Text(mode,'Light mode');
 
   observe(() => {
-    vanilla(page,{
+    Vanilla(page,{
       backgroundColor: isDark() ? 'black' : 'white'
     });
-    vanilla(text,{
+    Vanilla(text,{
       color:isDark() ? 'white' : 'black'
     });
-    vanilla(title,{
+    Vanilla(title,{
       color:isDark() ? 'white' : 'black'
     });
-    vanilla(navbar,{
+    Vanilla(navbar,{
       boxShadow: isDark() ? '2px 4px 8px rgba(222, 214, 214, 0.1)' : ''
     });
-    vanilla(mode,{
+    Vanilla(mode,{
       color: isDark() ? 'white':'black'
     });
     Text(mode, isDark() ? 'Dark mode' : 'Light mode');
     if(isDark()){
-      removeClass(page,'bg-image');
+      RemoveClass(page,'bg-image');
       page.classList.add('bg-image2');
-      vanilla(navbar,{
+      Vanilla(navbar,{
         backdropFilter:'blur(5px)'
-      })
+      });
     }else{
-      removeClass(page,'bg-image2');
+      RemoveClass(page,'bg-image2');
       page.classList.add('bg-image');
     }
   });
@@ -95,63 +95,63 @@ export const App = () => {
   const row = Row('space-evenly',{
     children:[
       mode,
-     switchBar
+      switchBar
     ]
   });
   
   // Appends child to the respective nodes
-  setChild(page,text);
-  setChild(page,navbar);
-  setChild(navbar,title);
-  setChild(navbar,row);
+  SetChild(page,text);
+  SetChild(page,navbar);
+  SetChild(navbar,title);
+  SetChild(navbar,row);
   
 
   
   //Drop down
-  const dropDown = createNode('div');
-  const dropDownHead = createNode('a');
+  const dropDown = CreateNode('div');
+  const dropDownHead = CreateNode('a');
   Style(dropDownHead,'text-center, font-bold');
   Text(dropDownHead,'Toolkit');
-  setChild(dropDown,dropDownHead);
+  SetChild(dropDown,dropDownHead);
   
   
   Style(dropDown,`w-auto h-auto rounded absolute bottom-10 right-10 shadowXl p-1 flex flex-col space`);
   observe(()=>{
-    vanilla(dropDown,{
+    Vanilla(dropDown,{
       border:isDark() ? '0.5px solid white' : '',
       backdropFilter:'blur(3px)',
       boxShadow:isDark() ? '2px 4px 8px rgba(0,0,0,0.1)' :''
     });
-    vanilla(dropDownHead,{
+    Vanilla(dropDownHead,{
       color: isDark() ? 'white' : ''
     });
   });
   
-    observeCount(()=>{
+  observeCount(()=>{
     Text(text,`${count()}`);
-    });
-   //Drop down Toolkit
-   const handleClick = (index) => {
-     index === 0 ? setCount(count() + 1) :
-       route.move(page, page2);
-   }
+  });
+  //Drop down Toolkit
+  const handleClick = (index) => {
+    index === 0 ? setCount(count() + 1) :
+      route.move(page, page2);
+  };
   
   ['Increment count','Next page'].map((element,index) => {
-    const container = createNode('div');
+    const container = CreateNode('div');
     Style(container,'border-bottom');
     
-    const text = createNode('a');
-    Style(text,'font-xs text-grey shadow-dynamic cursor-pointer')
+    const text = CreateNode('a');
+    Style(text,'font-xs text-grey shadow-dynamic cursor-pointer');
     Text(text,element);
-    setChild(container,text);
-    setChild(dropDown, container);
+    SetChild(container,text);
+    SetChild(dropDown, container);
     
     
     
-     //Drop down handler
-     listenForEvent(text,'click',() => handleClick(index));
+    //Drop down handler
+    HandleEvent(text,'click',() => handleClick(index));
   });
-  setChild(page,dropDown);
+  SetChild(page,dropDown);
  
  
   /**
@@ -162,17 +162,17 @@ export const App = () => {
   
   //Floating action button
   
-  vanilla(document.body,{
+  Vanilla(document.body,{
     margin:0,
     padding:0
   });
 
-  vanilla(dropDown,{
+  Vanilla(dropDown,{
     display: dropBarState() ? 'flex' : 'none',
   });
   
   observeDropbarState(() =>{
-    vanilla(dropDown,{
+    Vanilla(dropDown,{
       display: dropBarState() ? 'flex' : 'none',
     });
   });
@@ -189,28 +189,27 @@ export const App = () => {
    */
   //Page 2
   
-  
   //New page
-  const page2 = createNode('div');
+  const page2 = CreateNode('div');
   
   //Styling
   Style(page2, 'fixed top-0 bottom-0 left-0 right-0 w-100 h-screen-full bg-black flex-container flex-col space');
   
   //Sample Text
-  const h4 = createNode('h4');
+  const h4 = CreateNode('h4');
   Text(h4,"Routing between pages is easy");
   Style(h4, "text-white");
   
   //back button
-  const back = createNode('button');
+  const back = CreateNode('button');
   Style(back,'p-1 absolute bottom-8 right-3 rounded pulse text-black bg-white border-none cursor-pointer hover');
   Text(back, 'Back');
-  setChild(page2,back);
-  listenForEvent(back,'click',() => {
+  SetChild(page2,back);
+  HandleEvent(back,'click',() => {
     route.move(page2, page);
-  })
+  });
   
   
   //Append Text to page
-  setChild(page2,h4);
-}
+  SetChild(page2,h4);
+};

@@ -8,6 +8,6 @@ app.use(express.static(path.join(__dirname,'layout')));
 
 // Start the server
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+  console.log(`Server is running on http://localhost:${port}`);
 });
 

@@ -4,8 +4,8 @@ const fs = require("fs");
 const path = require("path");
 
 const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
+  input: process.stdin,
+  output: process.stdout
 });
 
 const tsContent = `
@@ -144,92 +144,92 @@ export const App = () => {
 
 
 rl.question("Would you like to use TypeScript? (y/n) ", (answer) => {
-    const useTypeScript = answer.toLowerCase() === "y";
-    console.log("Installing please wait...");
-    if (useTypeScript) {
-        exec("npm install typescript @types/node --save-dev", (error, stdout, stderr) => {
-            if (error) {
-                console.error(`Error installing TypeScript: ${error.message}`);
-                rl.close();
-                return;
-            }
-            if (stderr) {
-                console.error(`stderr installing TypeScript: ${stderr}`);
-                rl.close();
-                return;
-            }
-            console.log(stdout);
+  const useTypeScript = answer.toLowerCase() === "y";
+  console.log("Installing please wait...");
+  if (useTypeScript) {
+    exec("npm install typescript @types/node --save-dev", (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error installing TypeScript: ${error.message}`);
+        rl.close();
+        return;
+      }
+      if (stderr) {
+        console.error(`stderr installing TypeScript: ${stderr}`);
+        rl.close();
+        return;
+      }
+      console.log(stdout);
 
            
-            createTsConfigFile();
-            createTypeScriptFile('./app.ts',tsContent);
-            rl.close();
-        });
-    } else {
-        exec("npm install",(error, stdout,stderr) => {
-            if(error){
-              console.error(`Error installing: ${error.message}`);
-              rl.close();
-              return;
-            }
+      createTsConfigFile();
+      createTypeScriptFile('./app.ts',tsContent);
+      rl.close();
+    });
+  } else {
+    exec("npm install",(error, stdout,stderr) => {
+      if(error){
+        console.error(`Error installing: ${error.message}`);
+        rl.close();
+        return;
+      }
 
-            if (stderr) {
-              console.error(`stderr installing: ${stderr}`);
-              rl.close();
-              return;
-          }
-          console.log(stdout);
-          rl.close(); // Close immediately
-        });
+      if (stderr) {
+        console.error(`stderr installing: ${stderr}`);
+        rl.close();
+        return;
+      }
+      console.log(stdout);
+      rl.close(); // Close immediately
+    });
        
-    }
+  }
 });
 
 
 function createTsConfigFile() {
-    const tsConfigPath = path.join(process.cwd(), "tsconfig.json");
+  const tsConfigPath = path.join(process.cwd(), "tsconfig.json");
 
-    // Check if tsconfig.json already exists
-    if (fs.existsSync(tsConfigPath)) {
-        console.log("tsconfig.json already exists, skipping creation.");
-        return;
-    }
+  // Check if tsconfig.json already exists
+  if (fs.existsSync(tsConfigPath)) {
+    console.log("tsconfig.json already exists, skipping creation.");
+    return;
+  }
 
-    const tsConfig = {
-        compilerOptions: {
-            target: "es6", // Or your preferred target
-            module: "commonjs", // Or "esnext"
-            strict: true,
-            esModuleInterop: true,
-            rootDir: "./",
-            sourceMap: true, // Recommended
-        },
-        include: ["**/*.ts"],
-        exclude: ["node_modules"]
-    };
+  const tsConfig = {
+    compilerOptions: {
+      target: "es6", // Or your preferred target
+      module: "commonjs", // Or "esnext"
+      strict: true,
+      esModuleInterop: true,
+      rootDir: "./",
+      sourceMap: true, // Recommended
+    },
+    include: ["**/*.ts"],
+    exclude: ["node_modules"]
+  };
 
-    fs.writeFileSync(tsConfigPath, JSON.stringify(tsConfig, null, 2));
-    console.log("tsconfig.json created.");
+  fs.writeFileSync(tsConfigPath, JSON.stringify(tsConfig, null, 2));
+  console.log("tsconfig.json created.");
 }
 
 
 function createTypeScriptFile(filePath,content = ""){
-    try {
-      // 1. Create the directory if it doesn't exist
-      const dir = path.dirname(filePath); // Extract the directory part of the path
-      fs.mkdirSync(dir, { recursive: true }); // Create directory and any necessary parent directories
+  try {
+    // 1. Create the directory if it doesn't exist
+    const dir = path.dirname(filePath); // Extract the directory part of the path
+    fs.mkdirSync(dir, { recursive: true }); // Create directory and any necessary parent directories
   
-      // 2. Write the content to the file
-      fs.writeFileSync(filePath, content);
+    // 2. Write the content to the file
+    fs.writeFileSync(filePath, content);
   
-      console.log(`TypeScript file created successfully at: ${filePath}`);
-      return true; // Indicate success
+    console.log(`TypeScript file created successfully at: ${filePath}`);
+    return true; // Indicate success
   
-    } catch (error) {
-      console.error(`Error creating TypeScript file at ${filePath}:`, error);
-      return false; // Indicate failure
-    }
+  } catch (error) {
+    console.error(`Error creating TypeScript file at ${filePath}:`, error);
+    return false; // Indicate failure
   }
+}
   
   
   
