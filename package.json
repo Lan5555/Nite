@@ -1,6 +1,6 @@
 {
   "name": "nj-library",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "description": "Excellent widgets to use and thousands of custom styles free for usage.",
   "main": "index.js",
   "scripts": {
@@ -26,7 +26,7 @@
     "public",
     "webpack.config.js",
     "global.css",
-    "READNE.md",
+    "README.md",
     "eslint.config.mjs",
     "copy.js"
   ],
