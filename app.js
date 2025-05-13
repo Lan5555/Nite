@@ -1,4 +1,4 @@
-import { RemoveClass, Row, Watch} from "./lib/state.js";
+import { Button, RemoveClass, Row, Watch} from "./lib/state.js";
 import {renderBody} from "./lib/state.js";
 import {SetChild} from "./lib/state.js";
 import {Style} from "./lib/state.js";
@@ -201,7 +201,10 @@ export const App = () => {
   Style(h4, "text-white");
   
   //back button
-  const back = CreateNode('button');
+  const back = Button({
+    variant:'contained',
+    text:'Back',
+  });
   Style(back,'p-1 absolute bottom-8 right-3 rounded pulse text-black bg-white border-none cursor-pointer hover');
   Text(back, 'Back');
   SetChild(page2,back);
