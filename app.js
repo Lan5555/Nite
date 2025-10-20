@@ -1,5 +1,4 @@
 import { Button, RemoveClass, Row, Watch} from "./lib/state.js";
-import {renderBody} from "./lib/state.js";
 import {SetChild} from "./lib/state.js";
 import {Style} from "./lib/state.js";
 import {CreateNode,route,Vanilla} from "./lib/state.js";
@@ -158,7 +157,7 @@ export const App = () => {
 
    * Rendered page, this displays the initial page created.
    */
-  renderBody(page); //Call only once
+  
   
   //Floating action button
   
@@ -215,4 +214,5 @@ export const App = () => {
   
   //Append Text to page
   SetChild(page2,h4);
+  return page;
 };
