@@ -1,6 +1,6 @@
 {
   "name": "nj-library",
-  "version": "2.1.9",
+  "version": "2.2.0",
   "description": "Excellent widgets to use and thousands of custom styles free for usage.",
   "main": "index.js",
   "scripts": {

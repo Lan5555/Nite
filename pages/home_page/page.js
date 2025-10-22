@@ -1,17 +1,16 @@
-import { 
-  Button, 
+import {  
   RemoveClass, 
   Row,SetChild,
   Style,
-  route,
   Vanilla,
   HandleEvent,
   Text,
   CreateNode,
   SwitchBar,
   Watch
-} from "../lib/state.js";
-import {nJFloatingActionButton as FAB} from "../lib/main.js";
+} from "../../lib/state";
+import {nJFloatingActionButton as FAB} from "../../lib/main";
+import { routeToPage } from "../routes";
 
 
 export const HomePage = () => {
@@ -136,7 +135,7 @@ export const HomePage = () => {
   //Drop down Toolkit
   const handleClick = (index) => {
     index === 0 ? setCount(prev => prev + 1) :
-      route.move(page, page2);
+      routeToPage(1);
   };
   
   ['Increment count','Next page'].map((element,index) => {
@@ -186,37 +185,5 @@ export const HomePage = () => {
     }
   },page);
   
-  /**
-   * Nite makes routing to pages quite easy. All you have to do is to use the route function
-   * Example usage below
-   */
-  //Page 2
-  
-  //New page
-  const page2 = CreateNode('div');
-  
-  //Styling
-  Style(page2, 'fixed top-0 bottom-0 left-0 right-0 w-100 h-screen-full bg-black flex-container flex-col space');
-  
-  //Sample Text
-  const h4 = CreateNode('h4');
-  Text(h4,"Routing between pages is easy");
-  Style(h4, "text-white");
-  
-  //back button
-  const back = Button({
-    variant:'contained',
-    text:'Back',
-  });
-  Style(back,'p-1 absolute bottom-8 right-3 rounded pulse text-black bg-white border-none cursor-pointer hover');
-  Text(back, 'Back');
-  SetChild(page2,back);
-  HandleEvent(back,'click',() => {
-    route.move(page2, page);
-  });
-  
-  
-  //Append Text to page
-  SetChild(page2,h4);
   return page;
 };
