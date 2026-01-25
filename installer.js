@@ -2,7 +2,7 @@
 /* eslint-disable no-undef */
 
 /**
- * NITE Framework Installer
+ * NITE Framework Installer with TypeScript Option
  * Usage: npx create-nite [projectName]
  */
 
@@ -13,11 +13,9 @@ import chalk from "chalk";
 import { spawn } from "child_process";
 import { fileURLToPath } from "url";
 
-// ---------- ESM __dirname FIX (WINDOWS SAFE) ----------
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// ---------- CONFIG ----------
 const projectName = process.argv[2] || "nite-project";
 
 const EXCLUDE = new Set([
@@ -31,19 +29,17 @@ const EXCLUDE = new Set([
   ".npmignore"
 ]);
 
-// ---------- LOGGER ----------
 const log = {
   title: m => console.log(chalk.cyanBright(`\n${m}`)),
   info: m => console.log(chalk.blue(`ℹ ${m}`)),
   success: m => console.log(chalk.green(`✔ ${m}`)),
-  error: m => console.log(chalk.red(`✖ ${m}`))
+  error: m => console.error(chalk.red(`✖ ${m}`))
 };
 
-// ---------- HELPERS ----------
 function run(cmd, args, cwd) {
   return new Promise((resolve, reject) => {
     const p = spawn(cmd, args, { cwd, stdio: "inherit", shell: true });
-    p.on("exit", code => (code === 0 ? resolve() : reject()));
+    p.on("exit", code => (code === 0 ? resolve() : reject(new Error(`${cmd} ${args.join(" ")} failed with code ${code}`))));
   });
 }
 
@@ -64,35 +60,56 @@ function copyDir(src, dest) {
   }
 }
 
-// ---------- MAIN ----------
 (async function main() {
   log.title("🌙 NITE Framework Installer");
 
-  const { installPath } = await inquirer.prompt([
-    {
-      type: "input",
-      name: "installPath",
-      message: "Where should we install Nite?",
-      default: path.join(process.cwd(), projectName)
+  try {
+    const answers = await inquirer.prompt([
+      {
+        type: "input",
+        name: "installPath",
+        message: "Where should we install Nite?",
+        default: path.join(process.cwd(), projectName)
+      },
+      {
+        type: "confirm",
+        name: "useTypeScript",
+        message: "Do you want to use TypeScript?",
+        default: false
+      }
+    ]);
+
+    const installPath = answers.installPath;
+    const useTypeScript = answers.useTypeScript;
+
+    log.info("Copying framework files...");
+    copyDir(__dirname, installPath);
+    log.success("Files copied");
+
+    log.info("Installing framework dependencies...");
+    const packageName = useTypeScript ? "nite-typescript" : "nj-library";
+    await run("npm", ["install", packageName], installPath);
+    log.success(`${packageName} installed`);
+
+    if (useTypeScript) {
+      log.info("Installing TypeScript dev dependencies...");
+      await run("npm", ["install", "--save-dev", "typescript", "@types/node"], installPath);
+      log.success("TypeScript ready");
     }
-  ]);
 
-  log.info("Copying framework files...");
-  copyDir(__dirname, installPath);
-  log.success("Files copied");
-
-  log.info("Installing dependencies...");
-  await run("npm", ["install"], installPath);
-  log.success("Dependencies installed");
-
-  console.log(chalk.greenBright(`
-✅ Nite installed successfully!
-
+    log.success("✅ Nite installed successfully!");
+    console.log(chalk.greenBright(`
 📁 Location: ${installPath}
 
 Next steps:
   cd ${installPath}
-  npm install (if needed)
-  start building with Nite 🌙
+  ${useTypeScript ? "Start creating TypeScript files" : "Start creating JavaScript files"}
+  import { Watch, createNode, Text, SetChild, HandleEvent } from '${packageName}';
 `));
+
+  } catch (err) {
+    log.error("Installation failed:");
+    console.error(err);
+    process.exit(1);
+  }
 })();
