@@ -7,7 +7,7 @@
 
 import { existsSync, mkdirSync } from "fs";
 import { join } from "path";
-import { prompt } from "inquirer";
+import  prompt  from "inquirer";
 import { spawn } from "child_process";
 
 // Get project name from CLI argument

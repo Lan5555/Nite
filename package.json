@@ -1,8 +1,8 @@
 {
   "name": "create-nite-app",
-  "version": "2.2.4",
+  "version": "2.2.6",
   "description": "Excellent widgets to use and thousands of custom styles free for usage.",
-  "main": "index.js",
+  "main": "app.js",
   "bin": {
     "nj-lib": "./installer.js"
   },
@@ -21,7 +21,6 @@
   },
   "homepage": "https://github.com/Lan5555/Nite.git",
   "files": [
-    "index.js",
     "app.js",
     "layout",
     "lib",
