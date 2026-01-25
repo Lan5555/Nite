@@ -17,8 +17,7 @@ For full documentation, visit: [Nite Documentation](http://nite-documentation.ve
 ## Installation
 
 ```bash
-npm install nj-library
-Or via CDN:
+npx create-nite-app
 
 
 // Initialize a reactive variable
