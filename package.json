@@ -1,6 +1,6 @@
 {
   "name": "create-nite-app",
-  "version": "2.2.6",
+  "version": "2.2.7",
   "description": "Excellent widgets to use and thousands of custom styles free for usage.",
   "main": "app.js",
   "bin": {
@@ -52,8 +52,9 @@
     "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
+    "chalk": "^5.6.2",
     "dotenv": "^10.0.0",
-    "inquirer": "^9.0.0",
-    "execa": "^7.0.0"
+    "execa": "^7.0.0",
+    "inquirer": "^9.0.0"
   }
 }

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable no-undef */
 
 /**
  * NITE Project Installer
@@ -7,16 +8,20 @@
 
 import { existsSync, mkdirSync } from "fs";
 import { join } from "path";
-import  prompt  from "inquirer";
+import inquirer from "inquirer";
+import chalk from "chalk";
 import { spawn } from "child_process";
 
-// Get project name from CLI argument
-// eslint-disable-next-line no-undef
 const projectName = process.argv[2] || "nite-project";
 
-/**
- * Helper to run shell commands cross-platform
- */
+const log = {
+  title: msg => console.log(chalk.cyanBright(`\n${msg}`)),
+  info: msg => console.log(chalk.blue(`ℹ ${msg}`)),
+  success: msg => console.log(chalk.green(`✔ ${msg}`)),
+  warn: msg => console.log(chalk.yellow(`⚠ ${msg}`)),
+  error: msg => console.log(chalk.red(`✖ ${msg}`))
+};
+
 function runCommand(cmd, args, cwd) {
   return new Promise((resolve, reject) => {
     const child = spawn(cmd, args, {
@@ -24,6 +29,7 @@ function runCommand(cmd, args, cwd) {
       stdio: "inherit",
       shell: true
     });
+
     child.on("exit", code => {
       if (code === 0) resolve();
       else reject(new Error(`${cmd} ${args.join(" ")} failed with exit code ${code}`));
@@ -32,15 +38,13 @@ function runCommand(cmd, args, cwd) {
 }
 
 (async function main() {
-  console.log("\n🚀 NITE Project Installer\n");
+  log.title("🚀 NITE Project Installer");
 
-  // Ask user installation details
-  const answers = await prompt([
+  const answers = await inquirer.prompt([
     {
       type: "input",
       name: "installPath",
       message: "Where should we install your project?",
-      // eslint-disable-next-line no-undef
       default: join(process.cwd(), projectName)
     },
     {
@@ -54,41 +58,40 @@ function runCommand(cmd, args, cwd) {
   const installDir = answers.installPath;
   const useTypeScript = answers.useTypeScript;
 
-  // Create folder if it doesn't exist
   if (!existsSync(installDir)) {
     mkdirSync(installDir, { recursive: true });
-    console.log(`Created folder: ${installDir}`);
+    log.success(`Created folder: ${installDir}`);
+  } else {
+    log.info(`Using existing folder: ${installDir}`);
   }
 
-  // Step 1: Initialize package.json if missing
   const packageJsonPath = join(installDir, "package.json");
   if (!existsSync(packageJsonPath)) {
-    console.log("\n📦 Initializing npm project...");
+    log.info("Initializing npm project...");
     await runCommand("npm", ["init", "-y"], installDir);
+    log.success("package.json created");
   }
 
-  // Step 2: Install Nite library
   const packageName = useTypeScript ? "nite-typescript" : "nj-library";
-  console.log(`\n📥 Installing ${packageName}...`);
+  log.info(`Installing ${chalk.bold(packageName)}...`);
   await runCommand("npm", ["install", packageName], installDir);
+  log.success(`${packageName} installed`);
 
-  // Step 3: Optional TypeScript build (if TypeScript project)
   if (useTypeScript) {
-    console.log("\n⚡ TypeScript project detected. Installing TypeScript...");
+    log.info("Installing TypeScript dependencies...");
     await runCommand("npm", ["install", "--save-dev", "typescript", "@types/node"], installDir);
-    console.log("✅ TypeScript installed. You can now create TS files in your project.");
+    log.success("TypeScript ready");
   }
 
-  console.log(`
-🎉 Nite project installed successfully at: ${installDir}
+  console.log(chalk.greenBright(`
+🎉 Nite project installed successfully!
+
+📁 Location: ${installDir}
 
 Next steps:
-1. cd ${installDir}
-2. ${useTypeScript ? "Create a TypeScript file in your project" : "Create a JavaScript file in your project"}
-3. Import Nite like this:
+  cd ${installDir}
+  import { Watch, createNode, Text, SetChild, HandleEvent } from '${packageName}';
 
-   import { Watch, createNode, Text, SetChild, HandleEvent } from '${packageName}';
-
-Happy coding! 🚀
-`);
+Happy coding with Nite 🌙
+`));
 })();
