@@ -11,15 +11,14 @@ import path from "path";
 import inquirer from "inquirer";
 import chalk from "chalk";
 import { spawn } from "child_process";
+import { fileURLToPath } from "url";
 
+// ---------- ESM __dirname FIX (WINDOWS SAFE) ----------
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// ---------- CONFIG ----------
 const projectName = process.argv[2] || "nite-project";
-
-const log = {
-  title: m => console.log(chalk.cyanBright(`\n${m}`)),
-  info: m => console.log(chalk.blue(`ℹ ${m}`)),
-  success: m => console.log(chalk.green(`✔ ${m}`)),
-  error: m => console.log(chalk.red(`✖ ${m}`))
-};
 
 const EXCLUDE = new Set([
   "node_modules",
@@ -28,9 +27,19 @@ const EXCLUDE = new Set([
   "installer.js",
   "package-lock.json",
   "pnpm-lock.yaml",
-  "yarn.lock"
+  "yarn.lock",
+  ".npmignore"
 ]);
 
+// ---------- LOGGER ----------
+const log = {
+  title: m => console.log(chalk.cyanBright(`\n${m}`)),
+  info: m => console.log(chalk.blue(`ℹ ${m}`)),
+  success: m => console.log(chalk.green(`✔ ${m}`)),
+  error: m => console.log(chalk.red(`✖ ${m}`))
+};
+
+// ---------- HELPERS ----------
 function run(cmd, args, cwd) {
   return new Promise((resolve, reject) => {
     const p = spawn(cmd, args, { cwd, stdio: "inherit", shell: true });
@@ -55,6 +64,7 @@ function copyDir(src, dest) {
   }
 }
 
+// ---------- MAIN ----------
 (async function main() {
   log.title("🌙 NITE Framework Installer");
 
@@ -67,25 +77,22 @@ function copyDir(src, dest) {
     }
   ]);
 
-  const srcRoot = path.dirname(new URL(import.meta.url).pathname);
-  const targetRoot = installPath;
-
   log.info("Copying framework files...");
-  copyDir(srcRoot, targetRoot);
+  copyDir(__dirname, installPath);
   log.success("Files copied");
 
   log.info("Installing dependencies...");
-  await run("npm", ["install"], targetRoot);
+  await run("npm", ["install"], installPath);
   log.success("Dependencies installed");
 
   console.log(chalk.greenBright(`
 ✅ Nite installed successfully!
 
-📁 Location: ${targetRoot}
+📁 Location: ${installPath}
 
 Next steps:
-  cd ${targetRoot}
-  npm install (if not already)
+  cd ${installPath}
+  npm install (if needed)
   start building with Nite 🌙
 `));
 })();

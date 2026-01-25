@@ -1,10 +1,10 @@
 {
   "name": "create-nite-app",
-  "version": "2.2.8",
+  "version": "2.2.9",
   "description": "Excellent widgets to use and thousands of custom styles free for usage.",
   "main": "app.js",
   "bin": {
-    "nj-lib": "./installer.js"
+    "create-nite-app": "./installer.js"
   },
   "scripts": {
     "start": "webpack serve --mode development",
@@ -30,7 +30,9 @@
     "README.md",
     "eslint.config.mjs",
     "copy.js",
-    "pages"
+    "pages",
+    "installer.js",
+    "src"
   ],
   "devDependencies": {
     "@babel/core": "^7.27.1",
