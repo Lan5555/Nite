@@ -76,18 +76,33 @@ function copyDir(src, dest) {
         name: "useTypeScript",
         message: "Do you want to use TypeScript?",
         default: false
-      }
+      },
+      {
+        type: "confirm",
+        name: "useOOP",
+        message: "Do you want to use OOP?",
+        default: false
+      },
     ]);
 
     const installPath = answers.installPath;
     const useTypeScript = answers.useTypeScript;
+    const useOOP = answers.useOOP;
 
     log.info("Copying framework files...");
     copyDir(__dirname, installPath);
     log.success("Files copied");
 
     log.info("Installing framework dependencies...");
-    const packageName = useTypeScript ? "nite-typescript" : "nj-library";
+    let packageName = "nj-library";
+
+    if (useTypeScript && useOOP) {
+      packageName = "nite-typescript-oop";
+    } else if (useTypeScript) {
+      packageName = "nite-typescript";
+    } else if (useOOP) {
+      packageName = "nite-oop";
+    }
     await run("npm", ["install", packageName], installPath);
     log.success(`${packageName} installed`);
 

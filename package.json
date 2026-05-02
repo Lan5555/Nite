@@ -1,6 +1,6 @@
 {
   "name": "create-nite-app",
-  "version": "2.2.9",
+  "version": "2.3.2",
   "description": "Excellent widgets to use and thousands of custom styles free for usage.",
   "main": "app.js",
   "bin": {
