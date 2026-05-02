@@ -95,7 +95,7 @@ function copyDir(src, dest) {
 📁 Location: ${installPath}
 
 Next steps:
-  cd ${projectName}
+  cd ${installPath}
   npm start
 `));
 
